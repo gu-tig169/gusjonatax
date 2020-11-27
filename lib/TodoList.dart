@@ -23,6 +23,8 @@ class TodoList extends StatelessWidget {
                   ? TextDecoration.lineThrough
                   : TextDecoration.none)),
         ),
+        activeColor: Colors.grey,
+        checkColor: Colors.black,
         secondary: IconButton(
           icon: Icon(Icons.delete),
           onPressed: () {
@@ -34,7 +36,7 @@ class TodoList extends StatelessWidget {
         controlAffinity: ListTileControlAffinity.leading,
         onChanged: (bool value) {
           var state = Provider.of<MyState>(context, listen: false);
-          state.checkingBox(todo);
+          state.checkingBox(todo, value);
         });
   }
 }
