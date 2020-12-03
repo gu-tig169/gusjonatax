@@ -5,28 +5,13 @@ import 'package:provider/provider.dart';
 
 import 'SecondView.dart';
 
-Widget _popup() {
-  return PopupMenuButton(
-      itemBuilder: (context) => [
-            PopupMenuItem(
-              child: Text('all'),
-            ),
-            PopupMenuItem(
-              child: Text('done'),
-            ),
-            PopupMenuItem(
-              child: Text('undone'),
-            )
-          ],
-      icon: Icon(
-        Icons.more_vert,
-        size: 25,
-        color: Colors.black,
-      ));
+class MainView extends StatefulWidget {
+  @override
+  _MainViewState createState() => _MainViewState();
 }
 
-class MainView extends StatelessWidget {
-  @override
+class _MainViewState extends State<MainView> {
+  var filterBy = 'all';
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -34,12 +19,28 @@ class MainView extends StatelessWidget {
           title: Text('TIG169 TODO', style: TextStyle(color: Colors.black)),
           centerTitle: true,
           actions: [
-            _popup(),
+            PopupMenuButton(
+                onSelected: (value) {
+                  setState(() {
+                    filterBy = value;
+                  });
+                },
+                itemBuilder: (context) => [
+                      PopupMenuItem(child: Text('all'), value: 'all'),
+                      PopupMenuItem(child: Text('done'), value: 'done'),
+                      PopupMenuItem(child: Text('undone'), value: 'undone'),
+                    ],
+                icon: Icon(
+                  Icons.more_vert,
+                  size: 25,
+                  color: Colors.black,
+                ))
           ],
         ),
         body: Consumer<MyState>(
-          builder: (context, state, child) => TodoList(state.list),
-        ),
+            builder: (context, state, child) => TodoList(
+                  _filterList(state.list, filterBy),
+                )),
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
             backgroundColor: Colors.grey[350],
@@ -53,4 +54,13 @@ class MainView extends StatelessWidget {
               }
             }));
   }
+}
+
+List<StuffTodo> _filterList(list, filterBy) {
+  if (filterBy == 'all') return list;
+  if (filterBy == 'undone')
+    return (list.where((todo) => todo.checkbox == false).toList());
+  if (filterBy == 'done')
+    return (list.where((todo) => todo.checkbox == true).toList());
+  return null;
 }

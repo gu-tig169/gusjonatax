@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 void main() {
   var state = MyState();
+  state.fetchList();
 
   runApp(ChangeNotifierProvider(create: (context) => state, child: MyApp()));
 }
